@@ -1,8 +1,8 @@
 pub enum Flag {
-    Z = 0b01000000,
-    N = 0b00100000,
-    H = 0b00010000,
-    C = 0b00001000,
+    Z = 0b10000000,
+    N = 0b01000000,
+    H = 0b00100000,
+    C = 0b00010000,
 }
 #[allow(non_snake_case)]
 pub struct Register {
@@ -51,7 +51,7 @@ impl Register {
     /*  ---------- 16-bit Register Setters ---------- */
     pub fn set_AF(&mut self, value: u16) {
         self.A = ((value >> 8) & 0xFF) as u8;
-        self.F = (value & 0xFF) as u8;
+        self.F = (value & 0xF0) as u8;
     }
     pub fn set_BC(&mut self, value: u16) {
         self.B = ((value >> 8) & 0xFF) as u8;
@@ -71,11 +71,9 @@ impl Register {
     }
     pub fn set_flag(&mut self, flag: Flag) {
         self.F |= flag as u8;
-        self.F &= 0xF0;
     }
     pub fn clear_flag(&mut self, flag: Flag) {
         self.F &= !(flag as u8);
-        self.F &= 0xF0;
     }
     pub fn write_flag(&mut self, flag: Flag, state: bool) {
         if state {

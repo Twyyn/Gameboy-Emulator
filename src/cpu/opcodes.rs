@@ -286,16 +286,6 @@ pub enum Mnemonic {
     RRCA = 0x0F,
 }
 
-#[allow(dead_code)]
-pub enum CBType {
-    Rotate,
-    Shift,
-    Swap,
-    BitTest,
-    BitReset,
-    BitSet,
-}
-
 #[derive(Copy, Clone)]
 #[allow(non_camel_case_types, dead_code)]
 pub enum MnemonicCB {
@@ -587,8 +577,17 @@ pub enum MnemonicCB {
     SET_7_L = 0xFD,
     SET_7_HL_ = 0xFE,
 }
+#[allow(dead_code)]
+pub enum CBType {
+    Rotate,
+    Shift,
+    Swap,
+    BitTest,
+    BitReset,
+    BitSet,
+}
 impl MnemonicCB {
-    pub fn kind(&self) -> CBType {
+    pub fn cbtype(&self) -> CBType {
         match *self as u8 {
             0x00..=0x1F => CBType::Rotate,   /* RLC, RRC, RL, RR */
             0x20..=0x2F => CBType::Shift,    /* SLA, SRA, SRL */
