@@ -1,21 +1,27 @@
-pub enum Flag {
-    Z = 0b10000000,
-    N = 0b01000000,
-    H = 0b00100000,
-    C = 0b00010000,
+use crate::cpu::bitflags::bitflags;
+
+bitflags! {
+    struct Flag: u8 {
+        /* Flag Register (F) */
+        const Z = 1 << 7; /* Zero */
+        const N = 1 << 6; /* Subtract */
+        const H = 1 << 5; /* Half Carry */
+        const C = 1 << 4; /* Carry */
+    }
 }
+
 #[allow(non_snake_case)]
 pub struct Register {
-    PC: u16,
-    SP: u16,
-    A: u8,
+    pub PC: u16,
+    pub SP: u16,
+    pub A: u8,
     F: u8,
-    B: u8,
-    C: u8,
-    D: u8,
-    E: u8,
-    H: u8,
-    L: u8,
+    pub B: u8,
+    pub C: u8,
+    pub D: u8,
+    pub E: u8,
+    pub H: u8,
+    pub L: u8,
     pub IE: u8,
 }
 #[allow(non_snake_case)]
@@ -67,13 +73,13 @@ impl Register {
     }
     /* ---------- Flag Helpers ----------  */
     pub fn get_flag(&self, flag: Flag) -> bool {
-        (self.F & flag as u8) != 0
+        (self.F & flag.bits()) != 0
     }
     pub fn set_flag(&mut self, flag: Flag) {
-        self.F |= flag as u8;
+        self.F |= flag.bits();
     }
     pub fn clear_flag(&mut self, flag: Flag) {
-        self.F &= !(flag as u8);
+        self.F &= !(flag.bits());
     }
     pub fn write_flag(&mut self, flag: Flag, state: bool) {
         if state {
