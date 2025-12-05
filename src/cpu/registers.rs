@@ -72,23 +72,22 @@ impl Registers {
     }
     /* ---------- Flag Getters---------  */
     pub fn F(&self) -> u8 {
-        /* Helper */
         self.F.bits()
     }
     fn flag(&self, flag: Flags) -> bool {
         /* Helper */
         self.F.contains(flag)
     }
-    pub fn Z_flag(&self) -> bool {
+    pub fn flag_Z(&self) -> bool {
         self.flag(Flags::Z)
     }
-    pub fn N_flag(&self) -> bool {
+    pub fn flag_N(&self) -> bool {
         self.flag(Flags::N)
     }
-    pub fn H_flag(&self) -> bool {
+    pub fn flag_H(&self) -> bool {
         self.flag(Flags::H)
     }
-    pub fn C_flag(&self) -> bool {
+    pub fn flag_C(&self) -> bool {
         self.flag(Flags::C)
     }
     /* Flag Setters */
