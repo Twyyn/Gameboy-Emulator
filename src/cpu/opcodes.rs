@@ -1,3 +1,12 @@
+pub enum CBType {
+    Rotate,
+    Shift,
+    Swap,
+    BitTest,
+    BitReset,
+    BitSet,
+}
+
 #[allow(non_camel_case_types, dead_code)]
 pub enum Mnemonic {
     /*
@@ -284,15 +293,6 @@ pub enum Mnemonic {
     RRA = 0x1F,
     RLCA = 0x07,
     RRCA = 0x0F,
-}
-
-pub enum CBType {
-    Rotate,
-    Shift,
-    Swap,
-    BitTest,
-    BitReset,
-    BitSet,
 }
 
 #[derive(Copy, Clone)]
