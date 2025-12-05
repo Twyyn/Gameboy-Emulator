@@ -1,7 +1,7 @@
 use crate::cpu::bitflags::bitflags;
 
 bitflags! {
-    struct Flags: u8 {
+    pub struct Flags: u8 {
         /* Flag Register (F) */
         const Z = 1 << 7; /* Zero */
         const N = 1 << 6; /* Subtract */
@@ -10,7 +10,7 @@ bitflags! {
     }
 }
 #[allow(non_snake_case)]
-pub struct Register {
+pub struct Registers {
     pub PC: u16,
     pub SP: u16,
     pub A: u8,
@@ -24,7 +24,7 @@ pub struct Register {
     pub IE: u8,
 }
 #[allow(non_snake_case)]
-impl Register {
+impl Registers {
     pub fn new() -> Self {
         Self {
             PC: 0,
@@ -53,19 +53,10 @@ impl Register {
     pub fn HL(&self) -> u16 {
         ((self.H as u16) << 8) | (self.L as u16)
     }
-    /*  ---------- F Register ---------- */
-    pub fn F(&self) -> u8 {
-        /* Getter */
-        self.F.bits()
-    }
-    pub fn set_F(&mut self, value: u8) {
-        /* Setter */
-        self.F = Flags::from_bits_truncate(value & 0xF0);
-    }
     /*  ---------- 16-Bit Register Setters ---------- */
     pub fn set_AF(&mut self, value: u16) {
         self.A = ((value >> 8) & 0xFF) as u8;
-        self.set_F(value as u8)
+        self.set_F(value as u8);
     }
     pub fn set_BC(&mut self, value: u16) {
         self.B = ((value >> 8) & 0xFF) as u8;
@@ -79,17 +70,57 @@ impl Register {
         self.H = ((value >> 8) & 0xFF) as u8;
         self.L = (value & 0xFF) as u8;
     }
-    /* ---------- Flag Helpers ----------  */
-    pub fn get_flag(&self, flag: Flags) -> bool {
+    /* ---------- Flag Getters---------  */
+    pub fn F(&self) -> u8 {
+        /* Helper */
+        self.F.bits()
+    }
+    fn flag(&self, flag: Flags) -> bool {
+        /* Helper */
         self.F.contains(flag)
+    }
+    pub fn Z_flag(&self) -> bool {
+        self.flag(Flags::Z)
+    }
+    pub fn N_flag(&self) -> bool {
+        self.flag(Flags::N)
+    }
+    pub fn H_flag(&self) -> bool {
+        self.flag(Flags::H)
+    }
+    pub fn C_flag(&self) -> bool {
+        self.flag(Flags::C)
+    }
+    /* Flag Setters */
+    fn set_F(&mut self, value: u8) {
+        /* Helper */
+        self.F = Flags::from_bits_truncate(value & 0xF0);
     }
     pub fn set_flag(&mut self, flag: Flags) {
         self.F.insert(flag);
     }
-    pub fn clear_flag(&mut self, flag: Flags) {
+    pub fn set_flags(&mut self, Z: bool, N: bool, H: bool, C: bool) {
+        let mut flags = Flags::empty();
+        if Z {
+            flags.insert(Flags::Z);
+        }
+        if N {
+            flags.insert(Flags::N);
+        }
+        if H {
+            flags.insert(Flags::H);
+        }
+        if C {
+            flags.insert(Flags::C);
+        }
+        self.set_F(flags.bits())
+    }
+    /* Clear/Write Flag */
+    fn clear_flag(&mut self, flag: Flags) {
+        /* Helper */
         self.F.remove(flag);
     }
-    pub fn write_flag(&mut self, flag: Flags, state: bool) {
+    pub fn update_flag(&mut self, flag: Flags, state: bool) {
         if state {
             self.set_flag(flag)
         } else {
@@ -97,7 +128,7 @@ impl Register {
         }
     }
 }
-impl Default for Register {
+impl Default for Registers {
     fn default() -> Self {
         Self::new()
     }
