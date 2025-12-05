@@ -60,15 +60,15 @@ impl Registers {
     }
     pub fn set_BC(&mut self, value: u16) {
         self.B = ((value >> 8) & 0xFF) as u8;
-        self.C = (value & 0xFF) as u8;
+        self.C = value as u8;
     }
     pub fn set_DE(&mut self, value: u16) {
         self.D = ((value >> 8) & 0xFF) as u8;
-        self.E = (value & 0xFF) as u8;
+        self.E = value as u8;
     }
     pub fn set_HL(&mut self, value: u16) {
         self.H = ((value >> 8) & 0xFF) as u8;
-        self.L = (value & 0xFF) as u8;
+        self.L = value as u8;
     }
     /* ---------- Flag Getters---------  */
     pub fn F(&self) -> u8 {
@@ -115,9 +115,8 @@ impl Registers {
         }
         self.set_F(flags.bits())
     }
-    /* Clear/Write Flag */
-    fn clear_flag(&mut self, flag: Flags) {
-        /* Helper */
+    /* Clear/Update Flag */
+    pub fn clear_flag(&mut self, flag: Flags) {
         self.F.remove(flag);
     }
     pub fn update_flag(&mut self, flag: Flags, state: bool) {
