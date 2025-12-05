@@ -9,7 +9,6 @@ bitflags! {
         const C = 1 << 4; /* Carry */
     }
 }
-
 #[allow(non_snake_case)]
 pub struct Register {
     pub PC: u16,
